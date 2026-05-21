@@ -193,7 +193,7 @@ def main(page: ft.Page):
     page.padding = 16
     page.window.width = 700
     page.window.height = 500
-    page.scroll = ft.ScrollMode.ADAPTIVE
+    # page.scroll = ft.ScrollMode.ADAPTIVE
     # endregion
 
     con = duckdb.connect("data/finance.db")
@@ -237,9 +237,50 @@ def main(page: ft.Page):
         )
     )
 
+    # region [탭] 종목, 계좌, 보유, 시세, Join
+    tab_assets = ft.Column(
+        expand=True,
+        scroll=ft.ScrollMode.ALWAYS,
+        controls=[filter_input, table_assets],
+    )
+
+    tab_accounts = ft.Text("계좌")
+    tab_holdings = ft.Text("보유")
+    tab_prices = ft.Text("시세")
+    tab_join = ft.Text("Join")
+
+    tabs = ft.Tabs(
+        length=5,
+        expand=True,
+        content=ft.Column(
+            expand=True,
+            controls=[
+                ft.TabBar(
+                    tabs=[
+                        ft.Tab(label="종목", icon=ft.Icons.MONETIZATION_ON_OUTLINED),
+                        ft.Tab(label="계좌", icon=ft.Icons.SAVINGS_OUTLINED),
+                        ft.Tab(label="보유", icon=ft.Icons.FAVORITE_BORDER_OUTLINED),
+                        ft.Tab(label="시세", icon=ft.Icons.CANDLESTICK_CHART_OUTLINED),
+                        ft.Tab(label="Join", icon=ft.Icons.JOIN_LEFT_OUTLINED),
+                    ]
+                ),
+                ft.TabBarView(
+                    expand=True,
+                    controls=[
+                        tab_assets,
+                        tab_accounts,
+                        tab_holdings,
+                        tab_prices,
+                        tab_join,
+                    ],
+                ),
+            ],
+        ),
+    )
+    # endregion
+
     page.add(
-        filter_input,
-        table_assets,
+        tabs,
     )
 
 
